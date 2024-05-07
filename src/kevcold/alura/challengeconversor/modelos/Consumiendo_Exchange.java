@@ -8,11 +8,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class Api_Exchange {
-    private static final String EXCH_RATE = "98d891f2d6d037ae614ded1e";
+public class Consumiendo_Exchange {
+    private static final String EXCH_KEY = "98d891f2d6d037ae614ded1e";
+    private static final String URL = "https://v6.exchangerate-api.com/v6/" + EXCH_KEY + "/latest/";
 
-    public String BuscarValorDolar() {
-        URI direccion = URI.create("https://v6.exchangerate-api.com/v6/" + EXCH_RATE + "/latest/USD");
+    public Monedas BuscarMonedas(String busqueda) {
+        URI direccion = URI.create(URL + busqueda);
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -21,9 +22,9 @@ public class Api_Exchange {
                 .build();
 
         try{
-            HttpResponse<String> response =client
+            HttpResponse<String> response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            return new Gson().fromJson(response.body(), Monedas.class);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Moneda no encontrada");
         }
